@@ -18,10 +18,10 @@ const explosion = ({ pos, img }) => {
     }
 
     explosion.update = ({ lastTime, explosions, player, obstacles }) => {
-        if(explosion.size.x > 200) explosions.splice(explosions.indexOf(explosion), 1);
+        if(explosion.size.x > 160) explosions.splice(explosions.indexOf(explosion), 1);
 
-        explosion.pos = sub(explosion.pos, v(11, 11));
-        explosion.size = add(explosion.size, v(22, 22));
+        explosion.pos = sub(explosion.pos, v(7, 7));
+        explosion.size = add(explosion.size, v(14, 14));
         explosion.center = add(explosion.pos, half(explosion.size));
 
         //colission
@@ -33,7 +33,7 @@ const explosion = ({ pos, img }) => {
         const playerCol = checkProx(explosion.center, [player.center], 20 + explosion.size.x/2);
         if(playerCol){
             player.hit = true;
-            player.damage = 1;
+            player.damage = 0.5;
         }
         
     }
