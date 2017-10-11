@@ -40,7 +40,10 @@ const crate = ({ pos, img }) => {
             }
             console.log(newGun.name);
             GAME.gun = newGun;
+            GAME.gun.overheating = 0;
             GAME.crates.splice(GAME.crates.indexOf(crate), 1);
+            GAME.audio[3].load();
+            GAME.audio[3].play();
         }
     }
     return crate;

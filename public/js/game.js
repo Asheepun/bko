@@ -44,6 +44,13 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
             "background",//8
             "flash",//9
         ),
+        audio: loadAudio(
+            "shoot",//0
+            "hit",//1
+            "explosion",//2
+            "crate",//3
+            "bigshoot",//4
+        ),
         defeat: false,
         endGame: false,
     };

@@ -43,7 +43,9 @@ export const obstacle = ({ pos, img }) => {
 export const tnt = ({ pos, img }) => {
     const tnt = obstacle({ pos, img });
 
-    tnt.remove = ({ explosions, sprites, obstacles }) => {
+    tnt.remove = ({ explosions, sprites, obstacles, audio }) => {
+        audio[2].load();
+        audio[2].play();
         explosions.push(explosion({
             pos,
             img: sprites[5],

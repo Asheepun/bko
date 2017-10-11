@@ -26,7 +26,7 @@ const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id,
         ctx.restore();
     }
 
-    bullet.update = ({ obstacles, bullets, deltaTime, enemies, player, sprites, particles }) => {
+    bullet.update = ({ obstacles, bullets, deltaTime, enemies, player, sprites, particles, audio }) => {
         bullet.pos = add(bullet.pos, mul(bullet.speed, deltaTime));
         bullet.center = add(bullet.pos, half(bullet.size));
 
@@ -34,12 +34,16 @@ const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id,
         if(col){
             obstacles.find(o => o.center === col).hit = true;
             bullet.penetration--;
+            audio[1].load();
+            audio[1].play();
         }
         
         const enemyCol = checkProx(bullet.center, enemies.map(e => e.center), bullet.size.x/2 + 15);
         if(enemyCol){
             bullet.penetration = 0;
             bloodEffect({ pos: enemyCol, particles, speed, img: sprites[6]});
+            audio[1].load();
+            audio[1].play();
         }
 
         if(bullet.id !== player.id){

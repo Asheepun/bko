@@ -5,7 +5,9 @@ export const loadSprites = (...urls) => urls.reduce((arr, url) => {
     return arr;
 }, []);
 
-export const loadAudio = (...urls) => urls.reduce((arr, urls) => {
-    arr.push(new Audio(`/audio/${url}.wav`));
+export const loadAudio = (...urls) => urls.reduce((arr, url) => {
+    const audio = new Audio(`/audio/${url}.wav`);
+    audio.volume = 0.5;
+    arr.push(audio);
     return arr;
 }, []);

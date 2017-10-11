@@ -2,7 +2,7 @@ import { v, add, mul, sub, div, pipe, reverse, normalize, half } from "/js/vecto
 import { checkCol } from "/js/colission.js";
 import bullet from "/js/bullet.js";
 
-const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.6, size = v(15, 30), damage = 1, penetration = 1, spread = 0.1, times = 1, shotDelay = 0, knockback = 1 }) => {
+const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.6, size = v(15, 30), damage = 1, penetration = 1, spread = 0.1, times = 1, shotDelay = 0, knockback = 1, sound = 0 }) => {
     const gun = {
         name,
         shot: 0,
@@ -10,7 +10,7 @@ const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.
         overheating: 0,
     };
 
-    gun.update = ({ pointer, player, bullets, sentBullets, deltaTime, lastTime, sprites, obstacles }) => {
+    gun.update = ({ pointer, player, bullets, sentBullets, deltaTime, lastTime, sprites, obstacles, audio }) => {
         
                 if(gun.shot + fireRate < lastTime) gun.shooting = false;
 
@@ -55,10 +55,14 @@ const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.
                             setTimeout(() => {
                                 bullets.push(b);
                                 sentBullets.push(b);
+                                audio[sound].load();
+                                audio[sound].play();
                             }, i*shotDelay);
                         }else{
                             bullets.push(b);
                             sentBullets.push(b);
+                            audio[sound].load();
+                            audio[sound].play();
                         }
                     }
                     //knockback

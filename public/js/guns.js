@@ -30,6 +30,7 @@ const getGuns = () => [
         overheat: 8,
         size: v(30, 60),
         knockback: 20,
+        sound: 4,
     }),
     makeGun({
         name: "minigun",
