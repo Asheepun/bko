@@ -4,7 +4,7 @@ import getPointer from "/js/pointer.js";
 import { v } from "/js/vector.js";
 import { makeDrawAll, makeUpdateAll } from "/js/arrays.js";
 import { handleRecievedUpdates, sendSocketUpdates } from "/js/handleSocket.js";
-import { loadSprites } from "/js/loadAssets.js";
+import { loadSprites, loadAudio } from "/js/loadAssets.js";
 import getGuns from "/js/guns.js";
 import drawHud from "/js/hud.js";
 
@@ -18,11 +18,12 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         height: c.height*2,
         deltaTime: 0,
         lastTime: 0,
+        offset,
         pointer: getPointer(c, offset),
         keys: getKeys(document),
         player: null,
         guns: getGuns(),
-        gun: getGuns()[getGuns().length-1],
+        gun: getGuns()[0],
         enemies: [],
         obstacles: [],
         bushes: [],
@@ -30,6 +31,7 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         sentBullets: [],
         particles: [],
         explosions: [],
+        crates: [],
         sprites: loadSprites(
             "obstacle",//0
             "player",//1
@@ -62,6 +64,7 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
             GAME.obstacles,
             GAME.player,
             GAME.particles,
+            GAME.crates,
         );
 
         //checkDefeat
@@ -74,17 +77,17 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         sendSocketUpdates(GAME, socket);
 
         //updateOffset
-        offset.x = -GAME.player.center.x + c.width/2;
-        offset.y = -GAME.player.center.y + c.height/2;
-        if(offset.x > 0) offset.x = 0;
-        if(offset.x < -GAME.width + c.width) offset.x = -GAME.width + c.width;
-        if(offset.y > 0) offset.y = 0;
-        if(offset.y < -GAME.height + c.height) offset.y = -GAME.height + c.height;
+        GAME.offset.x = -GAME.player.center.x + c.width/2;
+        GAME.offset.y = -GAME.player.center.y + c.height/2;
+        if(GAME.offset.x > 0) GAME.offset.x = 0;
+        if(GAME.offset.x < -GAME.width + c.width) GAME.offset.x = -GAME.width + c.width;
+        if(GAME.offset.y > 0) GAME.offset.y = 0;
+        if(GAME.offset.y < -GAME.height + c.height) GAME.offset.y = -GAME.height + c.height;
 
 
         //draw
         ctx.save();
-        ctx.translate(offset.x, offset.y);
+        ctx.translate(GAME.offset.x, GAME.offset.y);
         //background
         for(let i = 0; i < GAME.height/40; i++){
             for(let j = 0; j < GAME.width/40; j++){
@@ -97,6 +100,7 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         //entities
         drawAll(
             GAME.particles,
+            GAME.crates,
             GAME.bullets,
             GAME.obstacles,
             GAME.enemies,
