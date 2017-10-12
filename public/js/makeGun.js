@@ -33,7 +33,7 @@ const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.
             
                         const pos = pipe(
                             player.center,
-                            x => add(x, mul(normalize(speed), 10)),
+                            x => add(x, mul(normalize(speed), 20*scale)),
                             x => sub(x, half(size)),
                         );
 
