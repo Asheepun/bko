@@ -1,12 +1,13 @@
 import object from "/js/object.js";
 import { v, add, half, angle } from "/js/vector.js";
 
-const particle = ({ pos, img, size, speed, time }) => {
+const particle = ({ pos, img, size, speed, time, scale }) => {
     const particle = object({
         pos,
         img,
         size,
         speed,
+        scale,
     });
     particle.started = 0;
     particle.time = time;

@@ -10,7 +10,7 @@ const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.
         overheating: 0,
     };
 
-    gun.update = ({ pointer, player, bullets, sentBullets, deltaTime, lastTime, sprites, obstacles, audio }) => {
+    gun.update = ({ pointer, player, bullets, sentBullets, deltaTime, lastTime, sprites, obstacles, audio, scale }) => {
         
                 if(gun.shot + fireRate < lastTime) gun.shooting = false;
 
@@ -45,6 +45,7 @@ const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.
                             damage,
                             id: player.id,
                             img: sprites[2],
+                            scale,
                         }); 
                     }
 
@@ -69,7 +70,8 @@ const makeGun = ({ name = "pistol", overheat = 3, fireRate = 500, shotSpeed = 0.
                     const knock = pipe(
                         sub(player.center, pointer.pos),
                         normalize,
-                        x => mul(x, knockback)
+                        x => mul(x, knockback),
+                        x => mul(x, scale),
                     );
 
                     //checkKnockbackColission and move

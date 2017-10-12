@@ -6,29 +6,30 @@ import { checkProx } from "/js/colission.js";
 
 export const scl = 40;
 
-const generateWorld = (map, game, sprites) => {
+const generateWorld = (map, game, sprites, scale) => {
     map.forEach((row, y) => strEach(row, (tile, x) => {
         const pos = v(x*scl, y*scl);
-        if(tile === "#") game.obstacles.push(obstacle({pos, img: sprites[0]}));
-        if(tile === "T") game.obstacles.push(tnt({pos, img: sprites[4]}));
-        if(tile === "B") game.bushes.push(object({pos, img: sprites[3]}));
-        if(tile === "C") game.crates.push(crate({pos: add(pos, v(10, 10)), img: sprites[7]}));
+        if(tile === "#") game.obstacles.push(obstacle({pos, img: sprites[0], scale}));
+        if(tile === "T") game.obstacles.push(tnt({pos, img: sprites[4], scale}));
+        if(tile === "B") game.bushes.push(object({pos, img: sprites[3], scale}));
+        if(tile === "C") game.crates.push(crate({pos: add(pos, v(10, 10)), img: sprites[7], scale}));
         if(tile === "1"){
-            if(game.id === 1) game.player = player({pos, id: 1, img: sprites[1]});
-            if(game.id === 2) game.enemies.push(player({pos, id: 1, img: sprites[1]}));
+            if(game.id === 1) game.player = player({pos, id: 1, img: sprites[1], scale});
+            if(game.id === 2) game.enemies.push(player({pos, id: 1, img: sprites[1], scale}));
         }
         if(tile === "2"){
-            if(game.id === 1) game.enemies.push(player({pos, id: 2, img: sprites[1]}));
-            if(game.id === 2) game.player = player({pos, id: 2, img: sprites[1]});
+            if(game.id === 1) game.enemies.push(player({pos, id: 2, img: sprites[1], scale}));
+            if(game.id === 2) game.player = player({pos, id: 2, img: sprites[1], scale});
         }
     }));
 }
 
-const crate = ({ pos, img }) => {
+const crate = ({ pos, img, scale }) => {
     const crate = object({
         pos,
         img,
         size: v(20, 20),
+        scale,
     });
 
     crate.update = (GAME) => {
