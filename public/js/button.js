@@ -1,16 +1,16 @@
-import { v, add, half } from "/js/vector.js";
+import { v, add, half, mul } from "/js/vector.js";
 
-const button = ({ text, action = () => console.log("clicked!"), pos, fontSize, color = "white", hoverColor = "#cecece", size = null }) => {
+const button = ({ text, action = () => console.log("clicked!"), pos, fontSize, color = "white", hoverColor = "#cecece", size = null, scale = 1 }) => {
     const button = {
         text,
         action,
-        pos,
-        fontSize,
+        pos: mul(pos, scale),
+        fontSize: fontSize * scale,
         color,
         hoverColor,
     };
-    if(size !== null) button.size = size;
-    else button.size = v(button.fontSize/2*button.text.length+fontSize, button.fontSize*2);
+    if(size !== null) button.size = mul(size, scale);
+    else button.size = v(button.fontSize/2*button.text.length+button.fontSize, button.fontSize*2);
     button.center = add(button.pos, half(button.size));
     button.down = false;
 
@@ -26,9 +26,6 @@ const button = ({ text, action = () => console.log("clicked!"), pos, fontSize, c
     }
 
     button.update = ({ pointer }) => {
-        if(size !== null) button.size = size;
-        else button.size = v(button.fontSize/2*button.text.length+fontSize, button.fontSize*2);
-        button.center = add(button.pos, half(button.size));
         //checkClick
         if(pointer.pos.x > button.pos.x
         && pointer.pos.y > button.pos.y

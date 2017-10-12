@@ -3,13 +3,15 @@ import { v, sub, half, add, mul, div, angle, pipe, normalize, reverse } from "/j
 import { checkProx } from "/js/colission.js";
 import particle from "/js/particle.js";
 
-const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id, img }) => {
+const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id, img, scale }) => {
     const bullet = object({
         pos,
         speed,
         size,
         img,
+        scale,
     });
+    bullet.pos = pos;
     bullet.id = id;
     bullet.penetration = penetration;
     bullet.damage = damage;
@@ -30,7 +32,7 @@ const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id,
         bullet.pos = add(bullet.pos, mul(bullet.speed, deltaTime));
         bullet.center = add(bullet.pos, half(bullet.size));
 
-        const col = checkProx(bullet.center, obstacles.map(o => o.center), bullet.size.x/2 + 20);
+        const col = checkProx(bullet.center, obstacles.map(o => o.center), bullet.size.x/2 + 20*scale);
         if(col){
             obstacles.find(o => o.center === col).hit = true;
             bullet.penetration--;
@@ -38,21 +40,21 @@ const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id,
             audio[1].play();
         }
         
-        const enemyCol = checkProx(bullet.center, enemies.map(e => e.center), bullet.size.x/2 + 15);
+        const enemyCol = checkProx(bullet.center, enemies.map(e => e.center), bullet.size.x/2 + 15*scale);
         if(enemyCol){
             bullet.penetration = 0;
-            bloodEffect({ pos: enemyCol, particles, speed, img: sprites[6]});
+            bloodEffect({ pos: enemyCol, particles, speed, img: sprites[6], scale});
             audio[1].load();
             audio[1].play();
         }
 
         if(bullet.id !== player.id){
-            const playerCol = checkProx(bullet.center, [player.center], bullet.size.x/2 + 15);
+            const playerCol = checkProx(bullet.center, [player.center], bullet.size.x/2 + 15*scale);
             if(playerCol){
                 bullet.penetration = 0;
                 player.hit = true;
                 player.damage = bullet.damage;
-                bloodEffect({ pos: player.center, particles, speed, img: sprites[6]});
+                bloodEffect({ pos: player.center, particles, speed, img: sprites[6], scale});
             }
         }
 
@@ -61,10 +63,10 @@ const bullet = ({ pos, speed, size = v(15, 30), penetration = 1, damage = 1, id,
     return bullet;
 }
 
-const bloodEffect = ({ pos, particles, speed, img }) => {
+const bloodEffect = ({ pos, particles, speed, img, scale }) => {
     for(let i = 0; i < 10; i++){
         particles.push(particle({
-            pos,
+            pos: div(pos, scale),
             speed: pipe(
                 speed,
                 normalize,
@@ -75,6 +77,7 @@ const bloodEffect = ({ pos, particles, speed, img }) => {
             size: v(5, 5),
             time: 60,
             img,
+            scale,
         }));
     }
 }

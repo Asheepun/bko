@@ -3,6 +3,7 @@ import button from "/js/button.js";
 import { v } from "/js/vector.js";
 import start from "/js/game.js";
 import { loadSprites } from "/js/loadAssets.js";
+import makeDrawBackground from "/js/background.js";
 
 let c, ctx, btn;
 
@@ -11,8 +12,13 @@ const GAME = {};
 window.onload = () => {
     GAME.c = document.getElementById("canvas");
     GAME.ctx = GAME.c.getContext("2d");
-    GAME.c.width = 800;
-    GAME.c.height = 600;
+    GAME.c.width = window.innerWidth;
+    GAME.c.height = GAME.c.width*0.75;
+    while(GAME.c.height > window.innerHeight-50){
+        GAME.c.width -= 2;
+        GAME.c.height = GAME.c.width*0.75;
+    }
+    GAME.scale = GAME.c.width/800;
     GAME.socket = io();
     GAME.pointer = getPointer(GAME.c);
     GAME.state = lobby;
@@ -27,9 +33,16 @@ window.onload = () => {
     GAME.sprites = loadSprites(
         "background",//0
     );
+    GAME.drawBackground = makeDrawBackground(GAME.sprites[0], GAME.c.width, GAME.c.height, GAME.scale);
 
     //makeLobby
-    GAME.buttons.push(button({pos: v(450, 50), text: "create game", fontSize: 17.5, action: createGame}));
+    GAME.buttons.push(button({
+        pos: v(450, 50), 
+        text: "create game", 
+        fontSize: 17.5, 
+        action: createGame,
+        scale: GAME.scale,
+    }));
     GAME.createName = "";
     GAME.type = e => {
         if(e.key === "Backspace"){ 
@@ -66,6 +79,7 @@ window.onload = () => {
                 fontSize: 20,
                 pos: v(300, 100 + i*60),
                 size: v(200, 50),
+                scale: GAME.scale,
                 action: () => joinGame(game.name),
             }));
         });
@@ -88,22 +102,17 @@ const waitingForPlayersLobby = () => {
         start(GAME);
     }
     //draw
-    //background
-    for(let i = 0; i < GAME.c.height/40; i++){
-        for(let j = 0; j < GAME.c.width/40; j++){
-            GAME.ctx.drawImage(
-                GAME.sprites[0],
-                j*40, i*40, 40, 40
-            );
-        }
-    }
+    GAME.drawBackground(GAME.ctx);
+    GAME.ctx.save();
+    GAME.ctx.scale(GAME.scale, GAME.scale);
     GAME.ctx.fillStyle = "white";
-    GAME.ctx.fillRect(260, 0, 300, 150);
+    GAME.ctx.fillRect(250, 0, 300, 150);
     GAME.ctx.fillStyle = "black";
     GAME.ctx.font = "40px Arial";
     GAME.ctx.fillText(GAME.name, 400-GAME.name.length*10, 50);
     GAME.ctx.font = "25px Arial";
     GAME.ctx.fillText("Waiting for players: " + GAME.players + "/2", 280, 100);
+    GAME.ctx.restore();
 }
 
 const lobby = () => {
@@ -112,19 +121,13 @@ const lobby = () => {
     GAME.gameButtons.forEach(b => b.update(GAME));
 
     //draw
-    //background
-    for(let i = 0; i < GAME.c.height/40; i++){
-        for(let j = 0; j < GAME.c.width/40; j++){
-            GAME.ctx.drawImage(
-                GAME.sprites[0],
-                j*40, i*40, 40, 40
-            );
-        }
-    }
+    GAME.drawBackground(GAME.ctx);
     //buttonsAndTextBox
     GAME.buttons.forEach(b => b.draw(GAME.ctx));
     GAME.gameButtons.forEach(b => b.draw(GAME.ctx));
     //drawGameCreatorTextField
+    GAME.ctx.save();
+    GAME.ctx.scale(GAME.scale, GAME.scale);
     GAME.ctx.fillStyle = "white";
     GAME.ctx.fillRect(240, 50, 200, 35);
     GAME.ctx.fillStyle = "black";
@@ -135,6 +138,7 @@ const lobby = () => {
         GAME.ctx.fillText("type name", 250, 75);
         GAME.ctx.globalAlpha = 1;
     }
+    GAME.ctx.restore();
 }
 
 const createGame = () => {

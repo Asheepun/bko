@@ -7,8 +7,9 @@ import { handleRecievedUpdates, sendSocketUpdates } from "/js/handleSocket.js";
 import { loadSprites, loadAudio } from "/js/loadAssets.js";
 import getGuns from "/js/guns.js";
 import drawHud from "/js/hud.js";
+import makeDrawBackground from "/js/background.js";
 
-const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
+const start = ({ name, playerNum, players, socket, c, ctx, map, scale}) => {
     
     const offset = v(0, 0);
     const GAME = {
@@ -19,6 +20,7 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         deltaTime: 0,
         lastTime: 0,
         offset,
+        scale,
         pointer: getPointer(c, offset),
         keys: getKeys(document),
         player: null,
@@ -57,8 +59,9 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
 
     const drawAll = makeDrawAll(ctx);
     const updateAll = makeUpdateAll(GAME);
+    const drawBackground = makeDrawBackground(GAME.sprites[8], GAME.width, GAME.height, scale);
 
-    generateWorld(map, GAME, GAME.sprites);
+    generateWorld(map, GAME, GAME.sprites, GAME.scale);
 
     const loop = (time) => {
         GAME.deltaTime = time - GAME.lastTime;
@@ -95,15 +98,7 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         //draw
         ctx.save();
         ctx.translate(GAME.offset.x, GAME.offset.y);
-        //background
-        for(let i = 0; i < GAME.height/40; i++){
-            for(let j = 0; j < GAME.width/40; j++){
-                ctx.drawImage(
-                    GAME.sprites[8],
-                    j*40, i*40, 40, 40
-                );
-            }
-        }
+        drawBackground(ctx);
         //entities
         drawAll(
             GAME.particles,
