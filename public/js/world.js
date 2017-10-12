@@ -45,6 +45,8 @@ const crate = ({ pos, img }) => {
             GAME.audio[3].load();
             GAME.audio[3].play();
         }
+        const enemyCol = checkProx(crate.center, GAME.enemies.map(e => e.center), 40);
+        if(enemyCol) GAME.crates.splice(GAME.crates.indexOf(crate), 1);
     }
     return crate;
 }

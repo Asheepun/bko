@@ -1,10 +1,10 @@
-import { v, half, add, sub } from "/js/vector.js";
+import { v, half, add, sub, mul } from "/js/vector.js";
 
-const object = ({ pos, size = v(40, 40), speed = v(0, 0), img, imgPos = v(0, 0) }) => {
+const object = ({ pos, size = v(40, 40), speed = v(0, 0), img, imgPos = v(0, 0), scale = 1 }) => {
     const object = {
-        pos,
-        size,
-        speed,
+        pos: mul(pos, scale),
+        size: mul(size, scale),
+        speed: mul(speed, scale),
         img,
         imgPos,
     }

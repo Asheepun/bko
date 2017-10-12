@@ -1,11 +1,11 @@
-import { v, add, half } from "/js/vector.js";
+import { v, add, half, mul } from "/js/vector.js";
 
-const button = ({ text, action = () => console.log("clicked!"), pos, fontSize, color = "white", hoverColor = "#cecece", size = null }) => {
+const button = ({ text, action = () => console.log("clicked!"), pos, fontSize, color = "white", hoverColor = "#cecece", size = null, scale = 1 }) => {
     const button = {
         text,
         action,
-        pos,
-        fontSize,
+        pos: mul(pos, scale),
+        fontSize: fontSize * scale,
         color,
         hoverColor,
     };

@@ -8,7 +8,7 @@ import { loadSprites, loadAudio } from "/js/loadAssets.js";
 import getGuns from "/js/guns.js";
 import drawHud from "/js/hud.js";
 
-const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
+const start = ({ name, playerNum, players, socket, c, ctx, map, scale}) => {
     
     const offset = v(0, 0);
     const GAME = {
@@ -19,6 +19,7 @@ const start = ({ name, playerNum, players, socket, c, ctx, map}) => {
         deltaTime: 0,
         lastTime: 0,
         offset,
+        scale,
         pointer: getPointer(c, offset),
         keys: getKeys(document),
         player: null,

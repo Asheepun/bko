@@ -1,6 +1,6 @@
 import { v, sub } from "/js/vector.js";
 
-const getPointer = (canvas, offset = v(0, 0)) => {
+const getPointer = (canvas, offset = v(0, 0), scale = 1) => {
     const pointer = {
         pos: v(0, 0),
         down: false,
